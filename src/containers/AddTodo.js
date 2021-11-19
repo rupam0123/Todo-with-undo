@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { addTodo } from '../actions'
-import {Modal,Button  } from 'react-bootstrap'
+import {Button,Modal,Form  } from 'react-bootstrap'
+
 
 
 
@@ -14,16 +15,12 @@ let AddTodo = ({ dispatch }) => {
 
     const handleSubmit=(e)=> {
     e.preventDefault();
-    if(!input.trim()) {
+    if(!input.trim() && !description.trim()) {
       return
     }
-    if(!description.trim()) {
-      return
-    }
-    dispatch(addTodo(input))
-    input ='';
-    dispatch(addTodo(description))
-    description='';
+    dispatch(addTodo(input,description))
+    e.target.reset();
+  
     
   }
 
@@ -31,25 +28,25 @@ let AddTodo = ({ dispatch }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
       <Modal.Dialog>
   <Modal.Header closeButton>
-    <Modal.Title>Modal title</Modal.Title>
+    <Modal.Title>Add and Update</Modal.Title>
   </Modal.Header>
 
   <Modal.Body>
-    <p>Modal body text goes here.</p>
-  </Modal.Body>
+    <label>Title</label><br/>
+    <input type="text" onChange={(event)=> input= event.target.value}/><br/><br/>
+    <label>Description</label><br/>
+    <input type="text" onChange={(event)=> description= event.target.value}/>
+ </Modal.Body>
 
   <Modal.Footer>
     <Button variant="secondary">Close</Button>
-    <Button variant="primary">Save changes</Button>
+    <Button type = "submit" variant="primary">AddTodo</Button>
   </Modal.Footer>
 </Modal.Dialog>
-        <button type="submit">
-          Add Todo
-        </button>
-      </form>
+        </Form>
     </div>
   )
 }

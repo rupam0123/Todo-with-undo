@@ -6,8 +6,14 @@ const todo = (state, action) => {
       return {
         id: action.id,
         text: action.text,
+        desc: action.desc,
         completed: false
       }
+    case 'UPDATING_INDEX':
+      return {
+        payload: action.payload
+
+      } 
     case 'TOGGLE_TODO':
       if (state.id !== action.id) {
         return state
@@ -22,6 +28,10 @@ const todo = (state, action) => {
   }
 }
 
+
+  
+
+
 const todos = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':
@@ -29,6 +39,11 @@ const todos = (state = [], action) => {
         ...state,
         todo(undefined, action)
       ]
+    case 'UPDATING_INDEX':
+      return[
+        ...state,
+        todo(undefined, action)
+      ] 
     case 'TOGGLE_TODO':
       return state.map(t =>
         todo(t, action)
