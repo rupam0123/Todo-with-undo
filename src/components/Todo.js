@@ -1,17 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@restart/ui/esm/Button'
-import {connect} from 'react-redux'
-import { updateIndex } from '../actions'
+
+import {useSelector,useDispatch} from 'react-redux'
+import { setUpdatingTodoIndex } from '../actions'
 
 
- function Todo  ({ onClick, completed, text,desc,id ,todo})  {
-  
-  const handleEdit = (todoId) => {
-    const todoIndex = todo.filter((todo) => todo.id === todoId);
-    console.log(todoIndex)
-    // updateIndex(todoIndex);
-  }
+export default function Todo  ({ onClick, completed,title,description,id})  {
+
+const todos = useSelector((state)=>state.todos)
+const dispatch = useDispatch()    
+
+
+const handleEdit = (todoId) => {
+  const todoIndex = todos.records.findIndex((todo) => todo.id === todoId);
+  dispatch(setUpdatingTodoIndex(todoIndex));
+}
   
   return(
   <ul>
@@ -20,11 +24,11 @@ import { updateIndex } from '../actions'
     style={{
       textDecoration:completed? 'line-through' : 'none',
       }}>
-        {id}<br/>
-       Title:{text}<br/>
-       Description:{desc}
+      ID:{id}<br/>
+      title:{title}<br/>
+      descr:{description}
+      <Button  onClick={()=>handleEdit(id)} >Update</Button>
   </li>
-  <Button  onClick={handleEdit} >Update</Button>
 </ul>
   )
  }
@@ -32,18 +36,8 @@ import { updateIndex } from '../actions'
 Todo.propTypes = {
   onClick: PropTypes.func.isRequired,
   completed: PropTypes.bool.isRequired,
-  updated: PropTypes.bool.isRequired,
-  text: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired
 }
-
-const mapState =(state)=>({
-  todos:state.todos
-});
-const mapDispatch ={
-  updateIndex
-}
-
-export default connect(mapState,mapDispatch)(Todo)
 
 
 

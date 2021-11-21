@@ -2,7 +2,8 @@ import React from 'react'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import { connect } from 'react-redux'
 
-let UndoRedo = ({ canUndo, canRedo, onUndo, onRedo }) => (
+function UndoRedo  ({ canUndo, canRedo, onUndo, onRedo })  {
+  return(
   <p>
     <button onClick={onUndo} disabled={!canUndo}>
       Undo
@@ -11,11 +12,12 @@ let UndoRedo = ({ canUndo, canRedo, onUndo, onRedo }) => (
       Redo
     </button>
   </p>
-)
+  )
+}
 
-const mapStateToProps = (state) => ({
-  canUndo: state.todos.past.length > 0,
-  canRedo: state.todos.future.length > 0
+const mapStateToProps = state => ({
+  canUndo: state.todos.records.length > 0,
+  canRedo: state.todos.records.length > 0
 })
 
 const mapDispatchToProps = ({
@@ -23,9 +25,7 @@ const mapDispatchToProps = ({
   onRedo: UndoActionCreators.redo
 })
 
-UndoRedo = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(UndoRedo)
-
-export default UndoRedo

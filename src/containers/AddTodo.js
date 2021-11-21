@@ -1,55 +1,59 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { addTodo } from '../actions'
-import {Button,Modal,Form  } from 'react-bootstrap'
+import React from 'react';
+import { connect } from 'react-redux';
+import { setTodo, addTodo, updateTodo } from '../actions';
+import {Modal,Button} from 'react-bootstrap'
 
+function TodoForm (props) {
+  const { todo, updatingTodoIndex } = props.todos;
 
-
-
-let AddTodo = ({ dispatch }) => {
-  let input
-  let description
-  
-
-
-
-    const handleSubmit=(e)=> {
-    e.preventDefault();
-    if(!input.trim() && !description.trim()) {
-      return
-    }
-    dispatch(addTodo(input,description))
-    e.target.reset();
-  
-    
+  const handleChangeInput = (event) => {
+    const { name, value } = event.target;
+    const updatedTodo = { ...todo, [name]: value };
+    props.setTodo(updatedTodo);
   }
 
-  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!todo.title.trim()||!todo.description.trim()) return;
+    if (!updatingTodoIndex && updatingTodoIndex !== 0) {
+      props.addTodo({ ...todo,id:new Date().getTime(),completed:false});
+    } else {
+      props.updateTodo({ ...todo });
+    }
+  }
 
   return (
     <div>
-      <Form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
       <Modal.Dialog>
-  <Modal.Header closeButton>
-    <Modal.Title>Add and Update</Modal.Title>
+  <Modal.Header>
+    <Modal.Title>Todo</Modal.Title>
   </Modal.Header>
 
   <Modal.Body>
-    <label>Title</label><br/>
-    <input type="text" onChange={(event)=> input= event.target.value}/><br/><br/>
-    <label>Description</label><br/>
-    <input type="text" onChange={(event)=> description= event.target.value}/>
- </Modal.Body>
+    Title:<br/>
+    <input type="text" name="title" value ={todo.title} onChange={handleChangeInput}/><br/>
+    Description:<br/>
+    <input type="text" name="description" value ={todo.description} onChange={handleChangeInput}/>
+  </Modal.Body>
 
   <Modal.Footer>
-    <Button variant="secondary">Close</Button>
-    <Button type = "submit" variant="primary">AddTodo</Button>
+    <Button type ="submit" variant="primary">addTodo</Button>
   </Modal.Footer>
 </Modal.Dialog>
-        </Form>
+      </form>
     </div>
-  )
+  );
 }
-AddTodo = connect()(AddTodo)
 
-export default AddTodo
+const mapState = (state) => ({
+  todos: state.todos,
+});
+
+const mapDispatch = {
+  setTodo,
+  addTodo,
+  updateTodo,
+};
+
+export default connect(mapState, mapDispatch)(TodoForm);

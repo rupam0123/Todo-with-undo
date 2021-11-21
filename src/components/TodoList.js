@@ -1,26 +1,34 @@
-import React from 'react'
+import React from 'react';
+import { useSelector} from 'react-redux';
 import PropTypes from 'prop-types'
-import Todo from './Todo'
+import Todo from './Todo';
 
-const TodoList = ({ todos, onTodoClick }) => (
-  <ul>
-    {todos.map(todo =>
+export default function TodoList ( {onTodoClick}) {
+  
+  
+  const {records} = useSelector((state) => state.todos);
+  console.log('eeeeeeee',records)
+  return (
+    <div>
+      <ul>
+      {records.map(todo =>
       <Todo
         key={todo.id}
         {...todo}
         onClick={() => onTodoClick(todo.id)}
       />
     )}
-  </ul>
-)
+      </ul>
+    </div>
+  );
+}
 
 TodoList.propTypes = {
   todos: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     completed: PropTypes.bool.isRequired,
-    text: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired
   }).isRequired).isRequired,
   onTodoClick: PropTypes.func.isRequired
 }
-
-export default TodoList

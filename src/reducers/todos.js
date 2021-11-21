@@ -1,58 +1,62 @@
-import undoable from 'redux-undo'
 
-const todo = (state, action) => {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return {
-        id: action.id,
-        text: action.text,
-        desc: action.desc,
-        completed: false
-      }
-    case 'UPDATING_INDEX':
-      return {
-        payload: action.payload
+import {
+  SET_TODO,
+  ADD_TODO,
+  UPDATE_TODO,
+  SET_UPDATING_TODO_INDEX,
+  TOGGLE_TODO
+} from '../actions';
 
-      } 
-    case 'TOGGLE_TODO':
-      if (state.id !== action.id) {
-        return state
-      }
-
-      return {
-        ...state,
-        completed: !state.completed
-      }
-    default:
-      return state
-  }
+const initialState = {
+  todo: { title: '', description: '' },
+  records: [],
+  updatingTodoIndex: null,
+  completed:false
 }
 
-
-  
-
-
-const todos = (state = [], action) => {
+export default function todos (state = initialState, action) {
   switch (action.type) {
-    case 'ADD_TODO':
-      return [
+    case SET_TODO:
+      return {
         ...state,
-        todo(undefined, action)
-      ]
-    case 'UPDATING_INDEX':
-      return[
+        todo: action.payload,
+      };
+    case SET_UPDATING_TODO_INDEX:
+      return {
         ...state,
-        todo(undefined, action)
-      ] 
-    case 'TOGGLE_TODO':
-      return state.map(t =>
-        todo(t, action)
-      )
+        updatingTodoIndex: action.payload,
+        todo: { ...state.records[action.payload] },
+        completed:!state.completed
+      };
+    case ADD_TODO:
+      return {
+        ...state,
+        records: [...state.records, action.payload],
+        todo: initialState.todo,
+      };
+    case UPDATE_TODO:
+      const records = [...state.records];
+      records[state.updatingTodoIndex] = action.payload;
+      return {
+        ...state,
+        records,
+        todo: initialState.todo,
+        updatingTodoIndex: null,
+      };
+      case TOGGLE_TODO :
+        {
+          if (state.id !== action.id) {
+            return state
+          }
+          return {
+            ...state,
+            completed:!state.completed
+          }
+        }
+      
+
+   
     default:
-      return state
+      return state;
   }
 }
-
-const undoableTodos = undoable(todos)
-
-export default undoableTodos

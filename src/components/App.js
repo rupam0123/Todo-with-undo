@@ -11,7 +11,7 @@ const App = () => (
     <AddTodo />
     <VisibleTodoList />
     <Footer />
-    <UndoRedo />
+    {/* <UndoRedo /> */}
   </div>
 )
 
